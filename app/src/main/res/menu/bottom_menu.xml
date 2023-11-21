@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/favoritesFragment"
+        android:title="Library"
+        android:icon="@drawable/ic_favorite_filled" />
+
+    <item
+        android:id="@+id/homeFragment"
+        android:title="Search"
+        android:titleCondensed="@string/app_name"
+        android:icon="@drawable/ic_search"/>
+
+    <item
+        android:id="@+id/nowPlayingFragment"
+        android:title="Now Playing"
+        android:icon="@drawable/baseline_play_circle_24"/>
+
+</menu>
