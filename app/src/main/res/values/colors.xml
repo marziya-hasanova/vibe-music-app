@@ -3,4 +3,43 @@
     <color name="black">#FF000000</color>
     <color name="gray">#171716</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="my_light_primary">#4CAF50</color>
+
+    <!-- Secondary colors -->
+    <color name="my_light_primary_variant">#388E3C</color> <!-- a darker shade -->
+    <color name="my_light_secondary">#A2CFA4</color> <!-- a lighter shade -->
+
+    <!-- Background colors -->
+    <color name="my_light_background">#EBEEEB</color> <!-- the soft background green -->
+
+    <!-- Text and icon colors -->
+    <color name="my_light_onPrimary">#0B4926</color> <!-- white or any other color that is visible on primary color -->
+    <color name="my_light_onBackground">#000000</color> <!-- black or any other color that is visible on background color -->
+
+    <!-- Error colors -->
+    <color name="my_light_error">#B00020</color> <!-- a standard error color -->
+
+
+
+    <color name="my_dark_primary">#0C8764</color> <!-- replace with the actual dark green color you want -->
+
+    <!-- Primary variant for dark theme -->
+    <color name="my_dark_primary_variant">#2E7D32</color> <!-- a slightly less dark shade -->
+
+    <!-- Accent colors -->
+    <color name="my_dark_secondary">#69F0AE</color> <!-- a vibrant neon green for highlights and accents -->
+
+    <!-- Background color for dark theme -->
+    <color name="my_dark_background">#010E13</color> <!-- very dark color for the background -->
+    <color name="my_dark_background_two">#04151B</color> <!-- very dark color for the background -->
+
+    <!-- Text and icons color for dark theme -->
+    <color name="my_dark_onPrimary">#FFFFFF</color> <!-- typically white for the best contrast -->
+    <!-- Error color for dark theme -->
+    <color name="my_dark_error">#CF6679</color> <!-- error color that stands out on dark backgrounds -->
+
+
+    <color name="cardViewLightBackground">#E1EDE3</color>
+    <color name="cardViewDarkBackground">#000D11</color>
 </resources>

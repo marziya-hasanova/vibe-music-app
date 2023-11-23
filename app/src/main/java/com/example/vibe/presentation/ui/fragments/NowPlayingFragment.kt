@@ -17,6 +17,7 @@ import com.example.vibe.R
 import com.example.vibe.databinding.FragmentNowPlayingBinding
 import com.example.vibe.presentation.ui.viewModels.FavoritesViewModel
 import com.example.vibe.presentation.ui.viewModels.MusicPlayerViewModel
+import com.example.vibe.presentation.ui.viewModels.MusicViewModel
 import jp.wasabeef.glide.transformations.BlurTransformation
 import jp.wasabeef.glide.transformations.ColorFilterTransformation
 
@@ -25,12 +26,11 @@ class NowPlayingFragment : Fragment() {
     private lateinit var binding: FragmentNowPlayingBinding
     private val musicPlayerViewModel by activityViewModels<MusicPlayerViewModel>()
     private val favoritesViewModel by activityViewModels<FavoritesViewModel>()
+    private val musicViewModel by activityViewModels<MusicViewModel>()
     private lateinit var seekBar: SeekBar
     private lateinit var progressDuration: TextView
     private lateinit var progressPlaying: TextView
 
-
-    private var isFavorite = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -74,7 +74,8 @@ class NowPlayingFragment : Fragment() {
                 .placeholder(R.drawable.bg)
                 .transform(
                     BlurTransformation(24, 4),
-                    ColorFilterTransformation(R.color.black))
+                    ColorFilterTransformation(R.color.black)
+                    )
                 .into(blurImage)
 
         }
@@ -87,6 +88,7 @@ class NowPlayingFragment : Fragment() {
             }
         }
 
+
         musicPlayerViewModel.isPlaying.observe(viewLifecycleOwner) { isPlaying ->
             if (isPlaying) {
                 playButton.setImageResource(R.drawable.baseline_pause_circle_white)
@@ -95,14 +97,11 @@ class NowPlayingFragment : Fragment() {
             }
         }
 
-         favoritesViewModel.isFavorite.observe(viewLifecycleOwner){
-             isFavorite = it
-         }
 
         playButton.setOnClickListener {
-            if (musicPlayerViewModel.isPlaying.value == true && musicPlayerViewModel.isInitialized) {
+            if (musicPlayerViewModel.isPlaying.value == true && musicPlayerViewModel.isUnInitialized) {
                 musicPlayerViewModel.pause()
-            } else if (musicPlayerViewModel.isPlaying.value == false && musicPlayerViewModel.isInitialized) {
+            } else if (musicPlayerViewModel.isPlaying.value == false && musicPlayerViewModel.isUnInitialized) {
                 musicPlayerViewModel.play()
             } else {
                 Toast.makeText(requireContext(), "Nothing to play :(", Toast.LENGTH_SHORT).show()
@@ -128,6 +127,10 @@ class NowPlayingFragment : Fragment() {
             musicPlayerViewModel.toggleShuffle()
         }
 
+        musicPlayerViewModel.repeatButtonImage.observe(viewLifecycleOwner){
+            repeatButton.setImageResource(it)
+        }
+
         return binding.root
     }
 
@@ -139,7 +142,7 @@ class NowPlayingFragment : Fragment() {
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser) {
+                if (musicPlayerViewModel.isUnInitialized.not() && fromUser) {
                     musicPlayerViewModel.seekTo(progress.toLong())
                 }
                 Log.d("VideoPlayerFragment", "Seek bar progress changed to $progress")

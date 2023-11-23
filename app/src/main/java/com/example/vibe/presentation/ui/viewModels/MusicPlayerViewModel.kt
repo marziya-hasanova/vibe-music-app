@@ -2,7 +2,6 @@ package com.example.vibe.presentation.ui.viewModels
 
 import android.app.Application
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -27,7 +26,7 @@ class MusicPlayerViewModel(application: Application) : AndroidViewModel(applicat
 
     @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
     fun initPlayer() {
-        checkPlayerInitialization()
+        handlePlayerInitialization()
         setUpPlayer()
         previousSongLink = _songLink.value
     }
@@ -36,8 +35,8 @@ class MusicPlayerViewModel(application: Application) : AndroidViewModel(applicat
 
     lateinit var player: ExoPlayer
 
-    private val _songLink = MutableLiveData<String>()
-    private val songLink: LiveData<String> get() = _songLink
+    private val _songLink = MutableLiveData<String?>()
+    private val songLink: LiveData<String?> get() = _songLink
 
     private var previousSongLink: String? = null
 
@@ -50,11 +49,11 @@ class MusicPlayerViewModel(application: Application) : AndroidViewModel(applicat
     val currentPosition: LiveData<Int> get() = _currentPosition
     val totalDuration: LiveData<Int> get() = _totalDuration
 
-    val isInitialized = ::player.isInitialized.not()
+    val isUnInitialized = ::player.isInitialized.not()
 
     private val searchSongList = mutableListOf<Song>()
     private val favoriteSongList = mutableListOf<Song>()
-    private var isFavoritesListActive = false
+    var isFavoritesListActive = false
     private var currentSongIndex = -1
 
 
@@ -62,7 +61,10 @@ class MusicPlayerViewModel(application: Application) : AndroidViewModel(applicat
     val repeatMode: LiveData<RepeatMode> get() = _repeatMode
 
     private val _shuffleMode = MutableLiveData(ShuffleMode.SHUFFLE_OFF)
-    val shuffleMode: LiveData<ShuffleMode> get() = _shuffleMode
+    private val shuffleMode: LiveData<ShuffleMode> get() = _shuffleMode
+    val shuffleButtonImageRes = MutableLiveData<Int>()
+    val repeatButtonImage = MutableLiveData<Int>()
+
     val coverUrl = MutableLiveData<String>()
     val title = MutableLiveData<String>()
     val artist = MutableLiveData<String>()
@@ -75,7 +77,7 @@ class MusicPlayerViewModel(application: Application) : AndroidViewModel(applicat
             }
         }
 
-    private fun checkPlayerInitialization() {
+    private fun handlePlayerInitialization() {
         if (::player.isInitialized && _songLink.value != previousSongLink) {
             player.release()
         } else if (::player.isInitialized && _songLink.value == previousSongLink && isPlaying.value == true) {
@@ -104,7 +106,6 @@ class MusicPlayerViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-
     @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
     fun seekBarListener() {
         player.addListener(object : Player.Listener {
@@ -123,9 +124,13 @@ class MusicPlayerViewModel(application: Application) : AndroidViewModel(applicat
                             val currentPosition = _currentPosition.value ?: 0
                             val totalDuration = _totalDuration.value ?: 0
                             val tolerance = 1000 // 1 second tolerance
-
                             if (currentPosition >= totalDuration - tolerance && currentPosition <= totalDuration + tolerance) {
-                                playNext()
+                                if (repeatMode.value != RepeatMode.REPEAT_ONE) {
+                                    playNext()
+                                } else {
+                                    _currentPosition.value = 0
+                                    repeatOne()
+                                }
                             }
                         }
                     }
@@ -152,7 +157,6 @@ class MusicPlayerViewModel(application: Application) : AndroidViewModel(applicat
         title.value = song.title
         artist.value = song.artist
         initPlayer()
-
     }
 
     fun play() {
@@ -165,6 +169,10 @@ class MusicPlayerViewModel(application: Application) : AndroidViewModel(applicat
         _isPlaying.value = false
     }
 
+    fun seekTo(progress: Long) {
+        player.seekTo(progress)
+    }
+
     fun setSongList(songs: List<Song>) {
         searchSongList.clear()
         searchSongList.addAll(songs)
@@ -175,115 +183,120 @@ class MusicPlayerViewModel(application: Application) : AndroidViewModel(applicat
         favoriteSongList.clear()
         favoriteSongList.addAll(songs)
         isFavoritesListActive = true
-    }
 
+    }
 
     fun playNext() {
         val currentList = if (isFavoritesListActive) favoriteSongList else searchSongList
-        if (_shuffleMode.value == ShuffleMode.SHUFFLE_ON) {
-            currentSongIndex = (currentSongIndex + 1) % currentList.size
-            currentList.shuffle()
-        } else {
-            if (currentSongIndex >= 0 && currentSongIndex < currentList.size - 1) {
-                currentSongIndex++
+
+        if (shuffleMode.value == ShuffleMode.SHUFFLE_ON) {
+            if (currentSongIndex < currentList.size - 1) {
+                currentSongIndex = (currentSongIndex + 1) % currentList.size
+            } else {
+                if (repeatMode.value == RepeatMode.REPEAT_ALL) {
+                    currentSongIndex = 0
+                } else {
+                    return
+                }
             }
+            currentList.shuffle()
+            setPlayer(currentList[currentSongIndex], currentSongIndex)
+        } else if (currentSongIndex < 0){
+            return
+        } else {
+            if (currentSongIndex < currentList.size - 1) {
+                currentSongIndex++
+            } else {
+                if (repeatMode.value == RepeatMode.REPEAT_ALL) {
+                    currentSongIndex = 0
+                } else {
+                    return
+                }
+            }
+            setPlayer(currentList[currentSongIndex], currentSongIndex)
         }
-        setPlayer(currentList[currentSongIndex], currentSongIndex)
+
     }
 
     fun playPrevious() {
         val currentList = if (isFavoritesListActive) favoriteSongList else searchSongList
+
         if (_shuffleMode.value == ShuffleMode.SHUFFLE_ON) {
-            currentSongIndex =
-                if (currentSongIndex > 0) currentSongIndex - 1 else currentList.size - 1
-            currentList.shuffle()
-        } else {
-            if (currentSongIndex > 0 && currentSongIndex < currentList.size) {
+            if (currentSongIndex > 0) {
                 currentSongIndex--
+            } else {
+                if (repeatMode.value == RepeatMode.REPEAT_ALL) {
+                    currentSongIndex = currentList.size - 1
+                } else {
+                    return
+                }
             }
+            currentList.shuffle()
+            setPlayer(currentList[currentSongIndex], currentSongIndex)
+        } else if (currentSongIndex < 0) {
+            return
+        } else {
+            if (currentSongIndex > 0) {
+                currentSongIndex--
+            } else {
+                if (repeatMode.value == RepeatMode.REPEAT_ALL) {
+                    currentSongIndex = currentList.size - 1
+                } else {
+                    return
+                }
+            }
+            setPlayer(currentList[currentSongIndex], currentSongIndex)
         }
-        setPlayer(currentList[currentSongIndex], currentSongIndex)
+
     }
 
-    val shuffleButtonImageRes = MutableLiveData<Int>()
+    fun repeatOne() {
+        player.seekTo(0)
+        player.play()
+        _isPlaying.value = true
+    }
+
     fun toggleShuffle() {
-        _shuffleMode.value = when (_shuffleMode.value) {
-            ShuffleMode.SHUFFLE_OFF -> {
-                shuffleButtonImageRes.value = R.drawable.baseline_shuffle_on_24
-                ShuffleMode.SHUFFLE_ON
+        if (currentSongIndex != -1 && favoriteSongList.isNotEmpty() || searchSongList.isNotEmpty()) {
+            _shuffleMode.value = when (_shuffleMode.value) {
+                ShuffleMode.SHUFFLE_OFF -> {
+                    shuffleButtonImageRes.value = R.drawable.baseline_shuffle_on_24
+                    ShuffleMode.SHUFFLE_ON
+                }
+
+                ShuffleMode.SHUFFLE_ON -> {
+                    shuffleButtonImageRes.value = R.drawable.ic_shuffle
+                    ShuffleMode.SHUFFLE_OFF
+                }
+
+                else -> ShuffleMode.SHUFFLE_OFF
             }
-            ShuffleMode.SHUFFLE_ON -> {
-                shuffleButtonImageRes.value = R.drawable.ic_shuffle
-                ShuffleMode.SHUFFLE_OFF
-            }
-            else -> ShuffleMode.SHUFFLE_ON
-        }
+        } else return
     }
 
     fun toggleRepeat() {
-        _repeatMode.value = when (_repeatMode.value) {
-            RepeatMode.REPEAT_OFF -> RepeatMode.REPEAT_ALL
-            RepeatMode.REPEAT_ALL -> RepeatMode.REPEAT_ONE
-            RepeatMode.REPEAT_ONE -> RepeatMode.REPEAT_OFF
-            else -> {
-                return
-            }
-        }
-    }
+        if (currentSongIndex != -1 && favoriteSongList.isNotEmpty() || searchSongList.isNotEmpty()) {
+            _repeatMode.value = when (_repeatMode.value) {
+                RepeatMode.REPEAT_OFF -> {
+                    repeatButtonImage.value = R.drawable.baseline_repeat_on_24
+                    RepeatMode.REPEAT_ALL
+                }
 
-    fun repeat() {
-        when (_repeatMode.value) {
-            RepeatMode.REPEAT_OFF -> player.repeatMode = Player.REPEAT_MODE_OFF
-            RepeatMode.REPEAT_ALL -> player.repeatMode = Player.REPEAT_MODE_ALL
-            RepeatMode.REPEAT_ONE -> player.repeatMode = Player.REPEAT_MODE_ONE
-            else -> return
-        }
-    }
+                RepeatMode.REPEAT_ALL -> {
+                    repeatButtonImage.value = R.drawable.baseline_repeat_one_24
+                    RepeatMode.REPEAT_ONE
+                }
 
-    private val sharedPreferences =
-        application.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
-    val isSleepTimerEnabled: LiveData<Boolean>
-    private val _isSleepTimerEnabled = MutableLiveData<Boolean>()
-    private val _isSleepTimerTriggered = MutableLiveData<Boolean>()
-    val isSleepTimerTriggered: LiveData<Boolean> = _isSleepTimerTriggered
+                RepeatMode.REPEAT_ONE -> {
+                    repeatButtonImage.value = R.drawable.baseline_repeat_24
+                    RepeatMode.REPEAT_OFF
+                }
 
-
-    init {
-        _isSleepTimerEnabled.value = sharedPreferences.getBoolean("SLEEP_TIMER_ENABLED", false)
-        isSleepTimerEnabled = _isSleepTimerEnabled
-        handleSleepTimer(_isSleepTimerEnabled.value ?: false)
-    }
-
-    fun setSleepTimer(isEnabled: Boolean) {
-        with(sharedPreferences.edit()) {
-            putBoolean("SLEEP_TIMER_ENABLED", isEnabled)
-            apply()
-        }
-        _isSleepTimerEnabled.value = isEnabled
-        handleSleepTimer(isEnabled)
-    }
-
-    private var sleepTimerJob: Job? = null
-
-    private fun handleSleepTimer(isEnabled: Boolean) {
-        if (isEnabled && isPlaying.value == true) {
-            sleepTimerJob = viewModelScope.launch(Dispatchers.IO) {
-                try {
-                    Log.d("MusicPlayerViewModel", "Sleep timer started")
-                    delay(1 * 5 * 1000) // 5 seconds for testing purposes
-                    Log.d("MusicPlayerViewModel", "Time's up - stopping playback")
-                    withContext(Dispatchers.Main) {
-                        pause()
-                        _isSleepTimerTriggered.postValue(true)
-                    }
-                } catch (e: Exception) {
-                    Log.e("MusicPlayerViewModel", "Error in sleep timer: ${e.message}")
+                else -> {
+                    RepeatMode.REPEAT_OFF
                 }
             }
-        } else {
-            sleepTimerJob?.cancel()
-            _isSleepTimerTriggered.postValue(false)
-        }
+        } else return
     }
 
     override fun onCleared() {
@@ -291,10 +304,6 @@ class MusicPlayerViewModel(application: Application) : AndroidViewModel(applicat
             player.release()
         }
         super.onCleared()
-    }
-
-    fun seekTo(progress: Long) {
-        player.seekTo(progress)
     }
 
 }

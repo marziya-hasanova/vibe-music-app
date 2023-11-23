@@ -3,6 +3,7 @@ package com.example.vibe.presentation.ui.activities
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -25,10 +26,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var bottomNav: BottomNavigationView
-    private val viewModel by viewModels<MusicViewModel>()
-    private val musicPlayerViewModel by viewModels<MusicPlayerViewModel>()
-
-
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +34,14 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        SettingsActivity.applyTheme(this)
+        sharedPreferences = getSharedPreferences("VibePreferences", Context.MODE_PRIVATE)
+
+        val isDarkMode = sharedPreferences.getBoolean("DarkMode", false)
+        SettingsActivity.updateActionBarColor(this, isDarkMode)
+        SettingsActivity.updateBottomNavigationViewColor(this, isDarkMode)
+
 
         bottomNav = binding.bottomNavigationView
 
@@ -52,8 +58,6 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNav.setupWithNavController(navController)
 
-        musicPlayerViewModel.isSleepTimerEnabled.observe(this) {
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

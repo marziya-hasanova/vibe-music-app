@@ -24,6 +24,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:paddingBottom="8dp"
+        android:background="?attr/backgroundColor"
         app:layout_constraintBottom_toTopOf="@id/control_wrapper"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

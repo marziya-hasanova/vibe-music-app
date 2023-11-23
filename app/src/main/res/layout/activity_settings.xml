@@ -8,40 +8,28 @@
     tools:context=".presentation.ui.activities.SettingsActivity"
     android:elevation="0.8dp"
     android:paddingHorizontal="20dp"
-    android:paddingVertical="36dp">
+    android:paddingVertical="36dp"
+    android:background="?attr/backgroundColor">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center"
         android:padding="8dp">
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
             <TextView
-                android:id="@+id/set_timer"
+                android:id="@+id/switch_theme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/set_timer"
+                android:text="@string/switch_theme"
                 android:textSize="20sp"
                 android:padding="16dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/stop_player_after_30"
-                android:padding="16dp"/>
-        </LinearLayout>
         <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/timer_switch"
+            android:id="@+id/theme_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"/>
-
+            android:layout_marginStart="120dp"/>
     </LinearLayout>
 
     <LinearLayout

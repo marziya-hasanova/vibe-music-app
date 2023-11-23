@@ -3,13 +3,15 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardBackgroundColor="@color/gray">
+    android:backgroundTint="?attr/cardBackgroundColor">
 
     <TextView
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="24dp"
+        android:textColor="?attr/colorPrimaryVariant"
+        android:textStyle="bold"
         android:textSize="18sp"/>
 
 </androidx.cardview.widget.CardView>

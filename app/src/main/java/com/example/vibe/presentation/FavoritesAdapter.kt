@@ -47,7 +47,6 @@ class FavoritesAdapter(
                 val songItem = favoritesList[adjustedPosition]
 
                 holder.title.text = songItem.title
-//                holder.title.isSelected = true
                 holder.artist.text = songItem.artist
                 Glide.with(holder.itemView)
                     .load(songItem.cover)

@@ -1,27 +1,22 @@
 package com.example.vibe.presentation.ui.activities
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import com.example.vibe.R
 import com.example.vibe.databinding.ActivitySettingsBinding
-import com.example.vibe.presentation.ui.viewModels.MusicPlayerViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
     private lateinit var sharedPreferences: SharedPreferences
-    private val musicPlayerViewModel by viewModels<MusicPlayerViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,15 +29,63 @@ class SettingsActivity : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
         }
 
-        musicPlayerViewModel.isSleepTimerTriggered.observe(this) {
-            if (it) {
-                binding.timerSwitch.isChecked = false
+        sharedPreferences = getSharedPreferences("VibePreferences", Context.MODE_PRIVATE)
+
+        val isDarkMode = sharedPreferences.getBoolean("DarkMode", false)
+
+        updateActionBarColor(this, isDarkMode)
+
+        binding.themeSwitch.isChecked = isDarkMode
+        binding.themeSwitch.setOnCheckedChangeListener { _, isChecked ->
+            with(sharedPreferences.edit()) {
+                putBoolean("DarkMode", isChecked)
+                apply()
             }
+            applyTheme(this)
+            restartApp()
         }
 
-        binding.timerSwitch.setOnCheckedChangeListener { _, isChecked ->
-            musicPlayerViewModel.setSleepTimer(isChecked)
+    }
+
+    companion object {
+        fun applyTheme(context: Context) {
+            val sharedPreferences =
+                context.getSharedPreferences("VibePreferences", Context.MODE_PRIVATE)
+            val isDarkMode = sharedPreferences.getBoolean("DarkMode", true)
+
+            if (isDarkMode) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+
         }
+
+        fun updateActionBarColor(context: Context, isDarkMode: Boolean) {
+            val actionBar = (context as AppCompatActivity).supportActionBar
+            val actionBarColor = if (isDarkMode) {
+                ContextCompat.getColor(context, R.color.my_dark_background)
+            } else {
+                ContextCompat.getColor(context, R.color.my_light_secondary)
+            }
+            actionBar?.setBackgroundDrawable(ColorDrawable(actionBarColor))
+        }
+        fun updateBottomNavigationViewColor(context: Context, isDarkMode: Boolean) {
+            val bottomNavigationView = (context as AppCompatActivity).findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+            val bottomNavigationViewColor = if (isDarkMode) {
+                ContextCompat.getColor(context, R.color.my_dark_background)
+            } else {
+                ContextCompat.getColor(context, R.color.my_light_secondary)
+            }
+            bottomNavigationView?.itemBackground = ColorDrawable(bottomNavigationViewColor)
+        }
+    }
+
+    private fun restartApp() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
     }
 
 

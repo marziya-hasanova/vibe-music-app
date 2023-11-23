@@ -101,6 +101,7 @@ class FavoritesFragment : Fragment(), OnItemClickListener {
     override fun onFavoriteItemClick(song: Song, position: Int) {
         favoritesViewModel.toggleFavoriteStatus(song)
         adapter.notifyItemChanged(position)
+        adapter.notifyItemRemoved(position)
     }
 
     fun searchSong(searchView: SearchView) {

@@ -10,15 +10,16 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="8dp"
         android:layout_marginVertical="4dp"
-        app:cardElevation="8dp"
+        app:cardElevation="@dimen/elevation"
+        app:cardCornerRadius="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:backgroundTint="?attr/cardBackgroundColor">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="72dp"
-            android:background="@color/gray">
+            android:layout_height="72dp">
 
             <ImageView
                 android:id="@+id/cover_view"
@@ -43,7 +44,7 @@
                 android:paddingEnd="8dp"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:textColor="@color/white"
+                android:textColor="?attr/colorOnPrimary"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@id/favorite_default"
                 app:layout_constraintStart_toEndOf="@id/cover_view"
@@ -60,7 +61,7 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:layout_marginStart="8dp"
                 android:layout_marginBottom="12dp"
-                android:textColor="@color/white"
+                android:textColor="?attr/colorOnPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/cover_view"
                 app:layout_constraintEnd_toStartOf="@id/favorite_default"
