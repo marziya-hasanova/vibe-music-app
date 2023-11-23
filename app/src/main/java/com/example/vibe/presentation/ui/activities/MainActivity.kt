@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.fragment.NavHostFragment
@@ -17,16 +16,19 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.vibe.R
 import com.example.vibe.databinding.ActivityMainBinding
-import com.example.vibe.presentation.ui.viewModels.MusicPlayerViewModel
-import com.example.vibe.presentation.ui.viewModels.MusicViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var bottomNav: BottomNavigationView
-    private lateinit var sharedPreferences: SharedPreferences
+
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,10 +37,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        SettingsActivity.applyTheme(this)
-        sharedPreferences = getSharedPreferences("VibePreferences", Context.MODE_PRIVATE)
-
         val isDarkMode = sharedPreferences.getBoolean("DarkMode", false)
+        SettingsActivity.applyTheme(this)
         SettingsActivity.updateActionBarColor(this, isDarkMode)
         SettingsActivity.updateBottomNavigationViewColor(this, isDarkMode)
 

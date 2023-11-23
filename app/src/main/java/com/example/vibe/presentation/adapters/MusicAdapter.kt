@@ -1,4 +1,4 @@
-package com.example.vibe.presentation
+package com.example.vibe.presentation.adapters
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.example.vibe.R
 import com.example.vibe.domain.models.Song
 import com.example.vibe.databinding.SongItemBinding
+import com.example.vibe.presentation.viewHolders.SongViewHolder
 import com.example.vibe.presentation.interfaces.OnItemClickListener
 
 class MusicAdapter(

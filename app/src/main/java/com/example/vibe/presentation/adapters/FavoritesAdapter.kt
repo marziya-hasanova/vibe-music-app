@@ -1,4 +1,4 @@
-package com.example.vibe.presentation
+package com.example.vibe.presentation.adapters
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -9,6 +9,7 @@ import com.example.vibe.R
 import com.example.vibe.databinding.HeaderLayoutBinding
 import com.example.vibe.databinding.SongItemBinding
 import com.example.vibe.domain.models.Song
+import com.example.vibe.presentation.viewHolders.LibraryViewHolder
 import com.example.vibe.presentation.interfaces.OnItemClickListener
 
 class FavoritesAdapter(

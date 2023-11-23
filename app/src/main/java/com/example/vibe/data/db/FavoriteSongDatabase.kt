@@ -11,26 +11,6 @@ import com.example.vibe.domain.models.Song
     version = 4
 )
 abstract class FavoriteSongDatabase : RoomDatabase(){
-
     abstract fun favoriteSongDao(): FavoriteSongDao
-
-    companion object {
-        @Volatile
-        private var INSTANCE: FavoriteSongDatabase? = null
-
-        fun getDatabase(context: Context): FavoriteSongDatabase {
-
-            return INSTANCE ?: synchronized(this) {
-                INSTANCE ?: Room.databaseBuilder(
-                    context.applicationContext,
-                    FavoriteSongDatabase::class.java,
-                    "note_database"
-                ).fallbackToDestructiveMigration().build()
-                    .also {
-                        INSTANCE = it
-                    }
-            }
-        }
-    }
 
 }

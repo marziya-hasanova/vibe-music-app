@@ -5,18 +5,21 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.room.Room
 import com.example.vibe.R
 import com.example.vibe.data.db.FavoriteSongDatabase
 import com.example.vibe.data.repositories.FavoriteSongRepository
 import com.example.vibe.domain.models.Song
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FavoritesViewModel (application: Application): AndroidViewModel(application) {
-
-    private val dao = FavoriteSongDatabase.getDatabase(application).favoriteSongDao()
-    private val repository: FavoriteSongRepository = FavoriteSongRepository(dao)
+@HiltViewModel
+class FavoritesViewModel @Inject constructor(
+    private val repository: FavoriteSongRepository
+) : ViewModel() {
 
     private val _favorites = MutableLiveData<List<Song>>()
     val favorites: LiveData<List<Song>> = _favorites

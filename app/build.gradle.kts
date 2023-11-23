@@ -60,10 +60,6 @@ dependencies {
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
     implementation ("androidx.recyclerview:recyclerview:1.3.1")
 
-    val nav_version = "2.7.4"
-    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
-    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
-
     implementation("androidx.core:core-splashscreen:1.0.1")
 
 
@@ -79,15 +75,13 @@ dependencies {
 
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation ("com.squareup.retrofit:converter-gson:2.0.0-beta2")
-
 
     implementation ("androidx.room:room-runtime:2.4.2")
     implementation ("androidx.room:room-ktx:2.4.2")
     kapt ("androidx.room:room-compiler:2.4.2")
 
-    implementation("com.google.dagger:hilt-android:2.48.1")
-    kapt("com.google.dagger:hilt-android-compiler:2.48.1")
+    implementation ("com.google.dagger:hilt-android:2.48.1")
+    kapt ("com.google.dagger:hilt-android-compiler:2.48.1")
 
     implementation("jp.wasabeef:glide-transformations:4.3.0")
 }

@@ -7,12 +7,12 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,23 +20,24 @@ import com.bumptech.glide.Glide
 import com.example.vibe.R
 import com.example.vibe.databinding.FragmentHomeBinding
 import com.example.vibe.domain.models.Song
-import com.example.vibe.presentation.MusicAdapter
+import com.example.vibe.presentation.adapters.MusicAdapter
 import com.example.vibe.presentation.interfaces.OnItemClickListener
 import com.example.vibe.presentation.ui.viewModels.FavoritesViewModel
 import com.example.vibe.presentation.ui.viewModels.MusicPlayerViewModel
 import com.example.vibe.presentation.ui.viewModels.MusicViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.glide.transformations.BlurTransformation
 
+@AndroidEntryPoint
 class HomeFragment : Fragment(), OnItemClickListener {
 
     private lateinit var binding: FragmentHomeBinding
     private var songList = mutableListOf<Song>()
     private val recyclerView: RecyclerView by lazy { binding.recyclerView }
     private var adapter = MusicAdapter(songList, this)
-    private val musicViewModel by activityViewModels<MusicViewModel>()
-    private val musicPlayerViewModel by activityViewModels<MusicPlayerViewModel>()
+    private val musicViewModel: MusicViewModel by viewModels()
     private val favoritesViewModel by activityViewModels<FavoritesViewModel>()
-    private var isPlaying: Boolean? = false
+    private val musicPlayerViewModel by activityViewModels<MusicPlayerViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,10 +68,6 @@ class HomeFragment : Fragment(), OnItemClickListener {
             }
         }
 
-        musicPlayerViewModel.isPlaying.observe(viewLifecycleOwner) {
-            isPlaying = it
-        }
-
         favoritesViewModel.getAll()
 
         favoritesViewModel.favorites.observe(viewLifecycleOwner){
@@ -84,7 +81,7 @@ class HomeFragment : Fragment(), OnItemClickListener {
 
 
     override fun onItemClick(song: Song, position: Int) {
-        musicPlayerViewModel.setPlayer(song, position)
+        musicPlayerViewModel.setSongToPlayer(song, position)
         Toast.makeText(requireContext(), "play clicked", Toast.LENGTH_SHORT).show()
     }
 

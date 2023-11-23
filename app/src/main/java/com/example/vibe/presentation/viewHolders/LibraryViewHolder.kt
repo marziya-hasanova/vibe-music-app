@@ -1,4 +1,4 @@
-package com.example.vibe.presentation
+package com.example.vibe.presentation.viewHolders
 
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.RecyclerView

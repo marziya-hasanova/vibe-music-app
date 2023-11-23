@@ -18,15 +18,15 @@ import com.example.vibe.databinding.FragmentNowPlayingBinding
 import com.example.vibe.presentation.ui.viewModels.FavoritesViewModel
 import com.example.vibe.presentation.ui.viewModels.MusicPlayerViewModel
 import com.example.vibe.presentation.ui.viewModels.MusicViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.glide.transformations.BlurTransformation
 import jp.wasabeef.glide.transformations.ColorFilterTransformation
 
+@AndroidEntryPoint
 class NowPlayingFragment : Fragment() {
 
     private lateinit var binding: FragmentNowPlayingBinding
     private val musicPlayerViewModel by activityViewModels<MusicPlayerViewModel>()
-    private val favoritesViewModel by activityViewModels<FavoritesViewModel>()
-    private val musicViewModel by activityViewModels<MusicViewModel>()
     private lateinit var seekBar: SeekBar
     private lateinit var progressDuration: TextView
     private lateinit var progressPlaying: TextView
@@ -99,9 +99,9 @@ class NowPlayingFragment : Fragment() {
 
 
         playButton.setOnClickListener {
-            if (musicPlayerViewModel.isPlaying.value == true && musicPlayerViewModel.isUnInitialized) {
+            if (musicPlayerViewModel.isPlaying.value == true && musicPlayerViewModel.isPlayerInitialized) {
                 musicPlayerViewModel.pause()
-            } else if (musicPlayerViewModel.isPlaying.value == false && musicPlayerViewModel.isUnInitialized) {
+            } else if (musicPlayerViewModel.isPlaying.value == false && musicPlayerViewModel.isPlayerInitialized) {
                 musicPlayerViewModel.play()
             } else {
                 Toast.makeText(requireContext(), "Nothing to play :(", Toast.LENGTH_SHORT).show()
@@ -109,7 +109,9 @@ class NowPlayingFragment : Fragment() {
         }
 
         previousButton.setOnClickListener {
-            musicPlayerViewModel.playPrevious()
+            if (musicPlayerViewModel.isPlayerInitialized) {
+                musicPlayerViewModel.playPrevious()
+            }
         }
 
         nextButton.setOnClickListener {
@@ -142,7 +144,7 @@ class NowPlayingFragment : Fragment() {
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (musicPlayerViewModel.isUnInitialized.not() && fromUser) {
+                if (musicPlayerViewModel.isPlayerInitialized && fromUser) {
                     musicPlayerViewModel.seekTo(progress.toLong())
                 }
                 Log.d("VideoPlayerFragment", "Seek bar progress changed to $progress")

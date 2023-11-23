@@ -18,12 +18,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.vibe.R
 import com.example.vibe.databinding.FragmentFavoritesBinding
 import com.example.vibe.domain.models.Song
-import com.example.vibe.presentation.FavoritesAdapter
+import com.example.vibe.presentation.adapters.FavoritesAdapter
 import com.example.vibe.presentation.interfaces.OnItemClickListener
 import com.example.vibe.presentation.ui.viewModels.FavoritesViewModel
 import com.example.vibe.presentation.ui.viewModels.MusicPlayerViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.Normalizer
 
+
+@AndroidEntryPoint
 
 class FavoritesFragment : Fragment(), OnItemClickListener {
 
@@ -93,7 +96,7 @@ class FavoritesFragment : Fragment(), OnItemClickListener {
     }
 
     override fun onItemClick(song: Song, position: Int) {
-        musicPlayerViewModel.setPlayer(song, position)
+        musicPlayerViewModel.setSongToPlayer(song, position)
         Toast.makeText(requireContext(), "play clicked", Toast.LENGTH_SHORT).show()
 
     }

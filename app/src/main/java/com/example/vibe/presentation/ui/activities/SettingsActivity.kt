@@ -12,11 +12,15 @@ import androidx.core.content.ContextCompat
 import com.example.vibe.R
 import com.example.vibe.databinding.ActivitySettingsBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
-    private lateinit var sharedPreferences: SharedPreferences
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +33,6 @@ class SettingsActivity : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
         }
 
-        sharedPreferences = getSharedPreferences("VibePreferences", Context.MODE_PRIVATE)
 
         val isDarkMode = sharedPreferences.getBoolean("DarkMode", false)
 
