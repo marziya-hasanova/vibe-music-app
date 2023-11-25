@@ -13,5 +13,6 @@
     <string name="stop_player_after_30">App will stop after 30 minutes</string>
     <string name="vibe_by_marziya">Vibe by Marziya</string>
     <string name="version_1_0">version 1.0</string>
-<!--    <string name="formatted_song_title"></string>-->
+    <string name="there_is_nothing_to_show">There is nothing to show :(</string>
+    <!--    <string name="formatted_song_title"></string>-->
 </resources>

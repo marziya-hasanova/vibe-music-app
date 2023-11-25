@@ -1,26 +1,14 @@
 package com.example.vibe.presentation.ui.viewModels
 
-import android.app.Application
-import android.content.Context
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.room.Room
-import com.example.vibe.API_KEY
-import com.example.vibe.R
-import com.example.vibe.data.db.FavoriteSongDatabase
-import com.example.vibe.data.network.RetrofitClient
-import com.example.vibe.data.repositories.FavoriteSongRepository
-import com.example.vibe.data.repositories.MusicRepository
-import com.example.vibe.data.repositories.MusicRepositoryImpl
+import com.example.vibe.utils.API_KEY
+import com.example.vibe.domain.repositories.MusicRepository
 import com.example.vibe.domain.models.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

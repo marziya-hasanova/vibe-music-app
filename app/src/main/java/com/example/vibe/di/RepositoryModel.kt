@@ -1,8 +1,8 @@
 package com.example.vibe.di
 
 import com.example.vibe.data.network.ApiService
-import com.example.vibe.data.repositories.MusicRepository
-import com.example.vibe.data.repositories.MusicRepositoryImpl
+import com.example.vibe.domain.repositories.MusicRepository
+import com.example.vibe.domain.repositories.MusicRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

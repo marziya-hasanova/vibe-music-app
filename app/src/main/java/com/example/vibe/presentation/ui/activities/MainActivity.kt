@@ -1,7 +1,6 @@
 package com.example.vibe.presentation.ui.activities
 
 
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -15,6 +14,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.vibe.R
+import com.example.vibe.utils.THEME_PREFERENCES_KEY
 import com.example.vibe.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,11 +37,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val isDarkMode = sharedPreferences.getBoolean("DarkMode", false)
+        val isDarkMode = sharedPreferences.getBoolean(THEME_PREFERENCES_KEY, false)
         SettingsActivity.applyTheme(this)
         SettingsActivity.updateActionBarColor(this, isDarkMode)
         SettingsActivity.updateBottomNavigationViewColor(this, isDarkMode)
-
 
         bottomNav = binding.bottomNavigationView
 
@@ -65,7 +64,6 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.settings -> {
@@ -77,6 +75,5 @@ class MainActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
 
 }

@@ -1,4 +1,4 @@
-package com.example.vibe.data.repositories
+package com.example.vibe.domain.repositories
 
 import com.example.vibe.data.network.ApiService
 import com.example.vibe.domain.models.MusicData

@@ -1,6 +1,6 @@
 package com.example.vibe.di
 
-import com.example.vibe.BASE_URL
+import com.example.vibe.utils.BASE_URL
 import com.example.vibe.data.network.ApiService
 import dagger.Module
 import dagger.Provides

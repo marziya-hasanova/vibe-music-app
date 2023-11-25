@@ -53,6 +53,8 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
+    androidTestImplementation("androidx.navigation:navigation-testing:2.7.5")
     implementation("androidx.fragment:fragment-ktx:1.6.1")
 
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
@@ -84,6 +86,8 @@ dependencies {
     kapt ("com.google.dagger:hilt-android-compiler:2.48.1")
 
     implementation("jp.wasabeef:glide-transformations:4.3.0")
+
+    androidTestImplementation ("org.mockito:mockito-core:5.5.0")
 }
 
 kapt {

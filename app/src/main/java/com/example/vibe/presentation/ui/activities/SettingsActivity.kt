@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import com.example.vibe.R
+import com.example.vibe.utils.THEME_PREFERENCES
+import com.example.vibe.utils.THEME_PREFERENCES_KEY
 import com.example.vibe.databinding.ActivitySettingsBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,6 +21,7 @@ import javax.inject.Inject
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
+
     @Inject
     lateinit var sharedPreferences: SharedPreferences
 
@@ -33,8 +36,7 @@ class SettingsActivity : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
         }
 
-
-        val isDarkMode = sharedPreferences.getBoolean("DarkMode", false)
+        val isDarkMode = sharedPreferences.getBoolean(THEME_PREFERENCES_KEY, false)
 
         updateActionBarColor(this, isDarkMode)
 
@@ -53,8 +55,8 @@ class SettingsActivity : AppCompatActivity() {
     companion object {
         fun applyTheme(context: Context) {
             val sharedPreferences =
-                context.getSharedPreferences("VibePreferences", Context.MODE_PRIVATE)
-            val isDarkMode = sharedPreferences.getBoolean("DarkMode", true)
+                context.getSharedPreferences(THEME_PREFERENCES, Context.MODE_PRIVATE)
+            val isDarkMode = sharedPreferences.getBoolean(THEME_PREFERENCES_KEY, true)
 
             if (isDarkMode) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)

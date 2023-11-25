@@ -17,8 +17,6 @@ class MusicAdapter(
 ) :RecyclerView.Adapter<SongViewHolder>() {
 
     private lateinit var binding: SongItemBinding
-    private var favorites: List<Song> = emptyList()
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.song_item, parent, false)
         binding = SongItemBinding.bind(view)

@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.vibe.R
+import com.example.vibe.utils.VIEW_TYPE_ALL_FAVORITES_HEADER
+import com.example.vibe.utils.VIEW_TYPE_ALL_FAVORITES_ITEM
 import com.example.vibe.databinding.HeaderLayoutBinding
 import com.example.vibe.databinding.SongItemBinding
 import com.example.vibe.domain.models.Song
@@ -13,15 +15,9 @@ import com.example.vibe.presentation.viewHolders.LibraryViewHolder
 import com.example.vibe.presentation.interfaces.OnItemClickListener
 
 class FavoritesAdapter(
+    private var favoritesList: MutableList<Song>,
     private val listener: OnItemClickListener
 ) : RecyclerView.Adapter<LibraryViewHolder>() {
-
-    companion object {
-        private const val VIEW_TYPE_ALL_FAVORITES_HEADER = 0
-        private const val VIEW_TYPE_ALL_FAVORITES_ITEM = 1
-    }
-
-    private var favoritesList: List<Song> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibraryViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.song_item, parent, false)
@@ -43,7 +39,6 @@ class FavoritesAdapter(
     override fun onBindViewHolder(holder: LibraryViewHolder, position: Int) {
         when (holder) {
             is LibraryViewHolder.Favorites -> {
-                // Adjust the index to account for the header
                 val adjustedPosition = position - 1
                 val songItem = favoritesList[adjustedPosition]
 
@@ -72,13 +67,15 @@ class FavoritesAdapter(
 
     @SuppressLint("NotifyDataSetChanged")
     fun filterSongs(filteredList: List<Song>) {
-        favoritesList = filteredList
+        favoritesList.clear()
+        favoritesList.addAll(filteredList)
         notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun submitList(favorites: List<Song>) {
-        favoritesList = favorites
+        favoritesList.clear()
+        favoritesList.addAll(favorites)
         notifyDataSetChanged()
     }
 }

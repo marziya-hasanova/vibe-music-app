@@ -10,7 +10,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.room.Room
 import com.example.vibe.R
 import com.example.vibe.data.db.FavoriteSongDatabase
-import com.example.vibe.data.repositories.FavoriteSongRepository
+import com.example.vibe.domain.repositories.FavoriteSongRepository
 import com.example.vibe.domain.models.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

@@ -1,4 +1,4 @@
-package com.example.vibe.data.repositories
+package com.example.vibe.domain.repositories
 
 import com.example.vibe.domain.models.MusicData
 import retrofit2.http.Header

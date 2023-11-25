@@ -13,8 +13,10 @@ import com.example.vibe.domain.models.Song
 import com.example.vibe.presentation.RepeatMode
 import com.example.vibe.presentation.ShuffleMode
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -51,6 +53,7 @@ class MusicPlayerViewModel @Inject constructor(
     private val shuffleMode: LiveData<ShuffleMode> get() = _shuffleMode
     val shuffleButtonImageRes = MutableLiveData<Int>()
     val repeatButtonImage = MutableLiveData<Int>()
+    private val shuffledSongList = mutableListOf<Song>()
 
     val coverUrl = MutableLiveData<String>()
     val title = MutableLiveData<String>()
@@ -65,7 +68,6 @@ class MusicPlayerViewModel @Inject constructor(
         }
 
     fun setSongToPlayer(song: Song, index: Int) {
-
         val currentList = if (isFavoritesListActive) favoriteSongList else searchSongList
         if (index in currentList.indices) {
             currentSongIndex = index
@@ -83,21 +85,21 @@ class MusicPlayerViewModel @Inject constructor(
     }
 
     private fun setUpPlayer() {
-    if (!isPlayerInitialized || songLink.value != previousSongLink) {
-        val mediaItem = MediaItem.Builder()
-            .setUri(songLink.value)
-            .setMimeType(MimeTypes.AUDIO_MP4)
-            .build()
+        if (!isPlayerInitialized || songLink.value != previousSongLink) {
+            val mediaItem = MediaItem.Builder()
+                .setUri(songLink.value)
+                .setMimeType(MimeTypes.AUDIO_MP4)
+                .build()
 
-        player.setMediaItem(mediaItem)
-        player.prepare()
+            player.setMediaItem(mediaItem)
+            player.prepare()
 
-        isPlayerInitialized = true
+            isPlayerInitialized = true
 
-        seekBarListener()
-        play()
+            seekBarListener()
+            play()
+        }
     }
-}
 
     private fun handlePlayerState() {
         if (isPlayerInitialized && _songLink.value == previousSongLink && isPlaying.value == true) {
@@ -171,72 +173,45 @@ class MusicPlayerViewModel @Inject constructor(
         favoriteSongList.clear()
         favoriteSongList.addAll(songs)
         isFavoritesListActive = true
-
     }
 
     fun playNext() {
-        val currentList = if (isFavoritesListActive) favoriteSongList else searchSongList
+        val currentList = if (shuffleMode.value == ShuffleMode.SHUFFLE_ON) shuffledSongList
+        else if (isFavoritesListActive) favoriteSongList
+        else searchSongList
 
-        if (shuffleMode.value == ShuffleMode.SHUFFLE_ON) {
-            if (currentSongIndex < currentList.size - 1) {
-                currentSongIndex = (currentSongIndex + 1) % currentList.size
-            } else {
-                if (repeatMode.value == RepeatMode.REPEAT_ALL) {
-                    currentSongIndex = 0
-                } else {
-                    return
-                }
-            }
-            currentList.shuffle()
-            setSongToPlayer(currentList[currentSongIndex], currentSongIndex)
-        } else if (currentSongIndex < 0){
-            return
+        if (currentSongIndex < currentList.size - 1) {
+            currentSongIndex++
         } else {
-            if (currentSongIndex < currentList.size - 1) {
-                currentSongIndex++
+            if (repeatMode.value == RepeatMode.REPEAT_ALL) {
+                currentSongIndex = 0
             } else {
-                if (repeatMode.value == RepeatMode.REPEAT_ALL) {
-                    currentSongIndex = 0
-                } else {
-                    return
-                }
+                return
             }
-            setSongToPlayer(currentList[currentSongIndex], currentSongIndex)
         }
+
+        setSongToPlayer(currentList[currentSongIndex], currentSongIndex)
 
     }
 
     fun playPrevious() {
-        val currentList = if (isFavoritesListActive) favoriteSongList else searchSongList
+        val currentList = if (shuffleMode.value == ShuffleMode.SHUFFLE_ON) shuffledSongList
+        else if (isFavoritesListActive) favoriteSongList
+        else searchSongList
 
-        if (_shuffleMode.value == ShuffleMode.SHUFFLE_ON) {
-            if (currentSongIndex > 0) {
-                currentSongIndex--
-            } else {
-                if (repeatMode.value == RepeatMode.REPEAT_ALL) {
-                    currentSongIndex = currentList.size - 1
-                } else {
-                    return
-                }
-            }
-            currentList.shuffle()
-            setSongToPlayer(currentList[currentSongIndex], currentSongIndex)
-        } else if (currentSongIndex < 0) {
-            return
+        if (currentSongIndex > 0) {
+            currentSongIndex--
         } else {
-            if (currentSongIndex > 0) {
-                currentSongIndex--
+            if (repeatMode.value == RepeatMode.REPEAT_ALL) {
+                currentSongIndex = currentList.size - 1
             } else {
-                if (repeatMode.value == RepeatMode.REPEAT_ALL) {
-                    currentSongIndex = currentList.size - 1
-                } else {
-                    return
-                }
+                return
             }
-            setSongToPlayer(currentList[currentSongIndex], currentSongIndex)
         }
+        setSongToPlayer(currentList[currentSongIndex], currentSongIndex)
 
     }
+
 
     fun repeatOne() {
         player.seekTo(0)
@@ -245,22 +220,42 @@ class MusicPlayerViewModel @Inject constructor(
     }
 
     fun toggleShuffle() {
-        if (currentSongIndex != -1 && favoriteSongList.isNotEmpty() || searchSongList.isNotEmpty()) {
-            _shuffleMode.value = when (_shuffleMode.value) {
-                ShuffleMode.SHUFFLE_OFF -> {
-                    shuffleButtonImageRes.value = R.drawable.baseline_shuffle_on_24
-                    ShuffleMode.SHUFFLE_ON
-                }
+        viewModelScope.launch {
+            withContext(Dispatchers.Main) {
+                _shuffleMode.value = when (_shuffleMode.value) {
+                    ShuffleMode.SHUFFLE_OFF -> {
+                        withContext(Dispatchers.IO) {
+                            shuffledSongList.clear()
+                            val currentList =
+                                if (isFavoritesListActive) favoriteSongList else searchSongList
+                            shuffledSongList.addAll(currentList)
+                            shuffledSongList.shuffle()
+                        }
+                        shuffleButtonImageRes.value = R.drawable.baseline_shuffle_on_24
+                        ShuffleMode.SHUFFLE_ON
+                    }
 
-                ShuffleMode.SHUFFLE_ON -> {
-                    shuffleButtonImageRes.value = R.drawable.ic_shuffle
-                    ShuffleMode.SHUFFLE_OFF
-                }
+                    ShuffleMode.SHUFFLE_ON -> {
+                        withContext(Dispatchers.IO){
+                            val currentSong = if (currentSongIndex in shuffledSongList.indices)
+                                shuffledSongList[currentSongIndex]
+                            else null
+                            val originalList =
+                                if (isFavoritesListActive) favoriteSongList else searchSongList
+                            currentSongIndex =
+                                originalList.indexOfFirst { it == currentSong }.coerceAtLeast(0)
+                            shuffledSongList.clear()
+                        }
+                        shuffleButtonImageRes.value = R.drawable.ic_shuffle
+                        ShuffleMode.SHUFFLE_OFF
+                    }
 
-                else -> ShuffleMode.SHUFFLE_OFF
+                    else -> ShuffleMode.SHUFFLE_OFF
+                }
             }
-        } else return
+        }
     }
+
 
     fun toggleRepeat() {
         if (currentSongIndex != -1 && favoriteSongList.isNotEmpty() || searchSongList.isNotEmpty()) {
@@ -288,9 +283,7 @@ class MusicPlayerViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        if (isPlayerInitialized) {
-            player.release()
-        }
+        player.release()
         super.onCleared()
     }
 

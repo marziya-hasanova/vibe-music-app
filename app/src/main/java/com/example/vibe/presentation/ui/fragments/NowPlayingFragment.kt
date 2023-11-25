@@ -12,15 +12,15 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.example.vibe.R
 import com.example.vibe.databinding.FragmentNowPlayingBinding
-import com.example.vibe.presentation.ui.viewModels.FavoritesViewModel
 import com.example.vibe.presentation.ui.viewModels.MusicPlayerViewModel
-import com.example.vibe.presentation.ui.viewModels.MusicViewModel
+import com.example.vibe.utils.formatDuration
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.glide.transformations.BlurTransformation
 import jp.wasabeef.glide.transformations.ColorFilterTransformation
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class NowPlayingFragment : Fragment() {
@@ -31,6 +31,8 @@ class NowPlayingFragment : Fragment() {
     private lateinit var progressDuration: TextView
     private lateinit var progressPlaying: TextView
 
+    @Inject
+    lateinit var glide: RequestManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,32 +52,28 @@ class NowPlayingFragment : Fragment() {
 
         binding.songTitleView.isSelected = true
 
-        Glide.with(requireContext())
-            .load(R.drawable.bg)
+        glide.load(R.drawable.bg)
             .transform(
                 BlurTransformation(24, 4),
             )
             .into(blurImage)
 
-        Glide.with(requireContext())
-            .load(R.drawable.bg)
+        glide.load(R.drawable.bg)
             .circleCrop()
             .into(cover)
 
         musicPlayerViewModel.coverUrl.observe(viewLifecycleOwner) {
-            Glide.with(requireContext())
-                .load(it)
+            glide.load(it)
                 .placeholder(R.drawable.bg)
                 .circleCrop()
                 .into(cover)
 
-            Glide.with(requireContext())
-                .load(it)
+            glide.load(it)
                 .placeholder(R.drawable.bg)
                 .transform(
                     BlurTransformation(24, 4),
                     ColorFilterTransformation(R.color.black)
-                    )
+                )
                 .into(blurImage)
 
         }
@@ -115,21 +113,22 @@ class NowPlayingFragment : Fragment() {
         }
 
         nextButton.setOnClickListener {
-            musicPlayerViewModel.playNext()
+            if (musicPlayerViewModel.isPlayerInitialized) {
+                musicPlayerViewModel.playNext()
+            }        }
+
+        repeatButton.setOnClickListener {
+            musicPlayerViewModel.toggleRepeat()
         }
 
-         repeatButton.setOnClickListener {
-             musicPlayerViewModel.toggleRepeat()
-         }
-
-        musicPlayerViewModel.shuffleButtonImageRes.observe(viewLifecycleOwner){
+        musicPlayerViewModel.shuffleButtonImageRes.observe(viewLifecycleOwner) {
             shuffleButton.setImageResource(it)
         }
         shuffleButton.setOnClickListener {
             musicPlayerViewModel.toggleShuffle()
         }
 
-        musicPlayerViewModel.repeatButtonImage.observe(viewLifecycleOwner){
+        musicPlayerViewModel.repeatButtonImage.observe(viewLifecycleOwner) {
             repeatButton.setImageResource(it)
         }
 
@@ -149,10 +148,8 @@ class NowPlayingFragment : Fragment() {
                 }
                 Log.d("VideoPlayerFragment", "Seek bar progress changed to $progress")
             }
-
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
             }
-
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
@@ -184,9 +181,4 @@ class NowPlayingFragment : Fragment() {
         super.onPause()
     }
 
-    private fun formatDuration(duration: Int): String {
-        val minutes = (duration / 1000) / 60
-        val seconds = (duration / 1000) % 60
-        return String.format("%02d:%02d", minutes, seconds)
-    }
 }
