@@ -1,4 +1,4 @@
-package com.example.vibe.presentation.viewHolders
+package com.example.vibe.presentation.viewholders
 
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +19,7 @@ sealed class LibraryViewHolder (binding: ViewBinding): RecyclerView.ViewHolder(b
     }
 
     class Favorites(
-        val binding: SongItemBinding
+        binding: SongItemBinding
     ): LibraryViewHolder(binding)  {
 
         val title = binding.songTitle

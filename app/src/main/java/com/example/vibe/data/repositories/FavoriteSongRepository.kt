@@ -20,6 +20,4 @@ class FavoriteSongRepository @Inject constructor(
     suspend fun deleteFromFavorites (song: Song) = withContext(Dispatchers.IO) {
         favoriteSongDao.delete(song)
     }
-
-
 }

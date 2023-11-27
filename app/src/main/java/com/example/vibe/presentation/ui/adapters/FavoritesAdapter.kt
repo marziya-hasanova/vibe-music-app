@@ -11,8 +11,9 @@ import com.example.vibe.utils.VIEW_TYPE_ALL_FAVORITES_ITEM
 import com.example.vibe.databinding.HeaderLayoutBinding
 import com.example.vibe.databinding.SongItemBinding
 import com.example.vibe.domain.models.Song
-import com.example.vibe.presentation.viewHolders.LibraryViewHolder
+import com.example.vibe.presentation.viewholders.LibraryViewHolder
 import com.example.vibe.presentation.interfaces.OnItemClickListener
+import com.example.vibe.utils.MY_FAVORITES
 
 class FavoritesAdapter(
     private var favoritesList: MutableList<Song>,
@@ -51,7 +52,7 @@ class FavoritesAdapter(
                 holder.bind(songItem, adjustedPosition, listener)
             }
             is LibraryViewHolder.FavoritesHeader -> {
-                holder.header.text = "My Favorites"
+                holder.header.text = MY_FAVORITES
             }
         }
     }

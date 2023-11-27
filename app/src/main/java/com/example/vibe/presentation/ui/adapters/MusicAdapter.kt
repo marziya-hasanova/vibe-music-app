@@ -3,12 +3,13 @@ package com.example.vibe.presentation.adapters
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.Keep
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.vibe.R
 import com.example.vibe.domain.models.Song
 import com.example.vibe.databinding.SongItemBinding
-import com.example.vibe.presentation.viewHolders.SongViewHolder
+import com.example.vibe.presentation.viewholders.SongViewHolder
 import com.example.vibe.presentation.interfaces.OnItemClickListener
 
 class MusicAdapter(
@@ -45,6 +46,7 @@ class MusicAdapter(
         notifyDataSetChanged()
     }
 
+    @Keep
     @SuppressLint("NotifyDataSetChanged")
     fun updateFavorites(newFavorites: List<Song>) {
         songsList.forEach { song ->
