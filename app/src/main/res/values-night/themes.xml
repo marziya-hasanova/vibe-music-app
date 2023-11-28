@@ -2,9 +2,8 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Vibe" parent="Theme.Material3.Dark">
         <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
         <item name="colorPrimary">@color/my_dark_primary</item>
-        <item name="colorPrimaryVariant">@color/my_dark_primary</item>
+        <item name="colorPrimaryVariant">@color/my_dark_primary_variant</item>
         <item name="colorSecondary">@color/my_dark_secondary</item>
         <item name="backgroundColor">@color/my_dark_background_two</item>
         <item name="colorOnError">@color/my_dark_error</item>

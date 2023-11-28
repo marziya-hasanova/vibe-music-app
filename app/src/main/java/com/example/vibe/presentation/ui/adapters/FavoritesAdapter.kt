@@ -1,4 +1,4 @@
-package com.example.vibe.presentation.adapters
+package com.example.vibe.presentation.ui.adapters
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater

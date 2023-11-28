@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        SettingsActivity.applyTheme(this)
         super.onCreate(savedInstanceState)
         installSplashScreen()
 
@@ -38,10 +39,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val isDarkMode = sharedPreferences.getBoolean(THEME_PREFERENCES_KEY, false)
-        SettingsActivity.applyTheme(this)
         SettingsActivity.updateActionBarColor(this, isDarkMode)
         SettingsActivity.updateBottomNavigationViewColor(this, isDarkMode)
-
         bottomNav = binding.bottomNavigationView
 
         val navHostFragment =
@@ -67,7 +66,6 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.settings -> {
-                Toast.makeText(this, "settings", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, SettingsActivity::class.java)
                 startActivity(intent)
                 return true
@@ -75,5 +73,4 @@ class MainActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
 }

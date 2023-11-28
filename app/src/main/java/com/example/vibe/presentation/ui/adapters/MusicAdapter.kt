@@ -1,4 +1,4 @@
-package com.example.vibe.presentation.adapters
+package com.example.vibe.presentation.ui.adapters
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -6,15 +6,17 @@ import android.view.ViewGroup
 import androidx.annotation.Keep
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.example.vibe.R
 import com.example.vibe.domain.models.Song
 import com.example.vibe.databinding.SongItemBinding
 import com.example.vibe.presentation.viewholders.SongViewHolder
 import com.example.vibe.presentation.interfaces.OnItemClickListener
+import javax.inject.Inject
 
-class MusicAdapter(
+class MusicAdapter (
     private var songsList: MutableList<Song>,
-    private val listener: OnItemClickListener
+    private val listener: OnItemClickListener,
 ) :RecyclerView.Adapter<SongViewHolder>() {
 
     private lateinit var binding: SongItemBinding

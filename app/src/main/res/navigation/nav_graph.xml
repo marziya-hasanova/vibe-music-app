@@ -11,9 +11,6 @@
         android:label="Search"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_homeFragment_to_playingFragment"
-            app:destination="@id/playingFragment" />
-        <action
             android:id="@+id/action_homeFragment_to_nowPlayingFragment"
             app:destination="@id/nowPlayingFragment" />
         <action
@@ -26,23 +23,18 @@
         android:label="Library"
         tools:layout="@layout/fragment_favorites" >
         <action
-            android:id="@+id/action_favoritesFragment_to_playingFragment"
-            app:destination="@id/playingFragment" />
-        <action
             android:id="@+id/action_favoritesFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
         <action
             android:id="@+id/action_favoritesFragment_to_nowPlayingFragment"
             app:destination="@id/nowPlayingFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/nowPlayingFragment"
         android:name="com.example.vibe.presentation.ui.fragments.NowPlayingFragment"
         android:label="Now Playing"
         tools:layout="@layout/fragment_now_playing" >
-        <action
-            android:id="@+id/action_nowPlayingFragment_to_playingFragment"
-            app:destination="@id/playingFragment" />
         <action
             android:id="@+id/action_nowPlayingFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
@@ -50,9 +42,4 @@
             android:id="@+id/action_nowPlayingFragment_to_favoritesFragment"
             app:destination="@id/favoritesFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/playingFragment"
-        android:name="com.example.vibe.presentation.ui.fragments.NowPlayingFragment"
-        android:label="fragment_playing"
-        tools:layout="@layout/fragment_now_playing" />
 </navigation>

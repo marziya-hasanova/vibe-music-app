@@ -7,7 +7,8 @@ import com.example.vibe.domain.models.Song
 
 @Database(
     entities = [Song::class],
-    version = 4
+    version = 4,
+    exportSchema = false
 )
 abstract class FavoriteSongDatabase : RoomDatabase(){
     abstract fun favoriteSongDao(): FavoriteSongDao

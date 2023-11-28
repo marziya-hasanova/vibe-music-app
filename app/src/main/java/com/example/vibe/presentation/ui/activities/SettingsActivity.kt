@@ -3,6 +3,7 @@ package com.example.vibe.presentation.ui.activities
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.ColorStateList
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.MenuItem
@@ -37,13 +38,13 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         val isDarkMode = sharedPreferences.getBoolean(THEME_PREFERENCES_KEY, false)
-
+        updateSwitchColors(isDarkMode)
         updateActionBarColor(this, isDarkMode)
 
         binding.themeSwitch.isChecked = isDarkMode
         binding.themeSwitch.setOnCheckedChangeListener { _, isChecked ->
             with(sharedPreferences.edit()) {
-                putBoolean("DarkMode", isChecked)
+                putBoolean(THEME_PREFERENCES_KEY, isChecked)
                 apply()
             }
             applyTheme(this)
@@ -56,7 +57,7 @@ class SettingsActivity : AppCompatActivity() {
         fun applyTheme(context: Context) {
             val sharedPreferences =
                 context.getSharedPreferences(THEME_PREFERENCES, Context.MODE_PRIVATE)
-            val isDarkMode = sharedPreferences.getBoolean(THEME_PREFERENCES_KEY, true)
+            val isDarkMode = sharedPreferences.getBoolean(THEME_PREFERENCES_KEY, false)
 
             if (isDarkMode) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -86,14 +87,27 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateSwitchColors(isDarkMode: Boolean) {
+        val thumbColor = if (isDarkMode) {
+            ContextCompat.getColor(this, R.color.my_dark_primary_variant)
+        } else {
+            ContextCompat.getColor(this, R.color.my_light_primary_variant)
+        }
+        val trackColor = if (isDarkMode) {
+            ContextCompat.getColor(this, R.color.my_light_onPrimary)
+        } else {
+            ContextCompat.getColor(this, R.color.my_dark_onPrimary)
+        }
+        binding.themeSwitch.thumbTintList = ColorStateList.valueOf(thumbColor)
+        binding.themeSwitch.trackTintList = ColorStateList.valueOf(trackColor)
+    }
+
     private fun restartApp() {
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
         finish()
     }
-
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {

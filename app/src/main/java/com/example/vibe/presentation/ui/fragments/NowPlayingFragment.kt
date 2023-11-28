@@ -15,7 +15,9 @@ import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.RequestManager
 import com.example.vibe.R
 import com.example.vibe.databinding.FragmentNowPlayingBinding
+import com.example.vibe.presentation.ShuffleMode
 import com.example.vibe.presentation.ui.viewModels.MusicPlayerViewModel
+import com.example.vibe.utils.NOTHING_ON_PLAY
 import com.example.vibe.utils.formatDuration
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.glide.transformations.BlurTransformation
@@ -32,7 +34,7 @@ class NowPlayingFragment : Fragment() {
     private lateinit var progressPlaying: TextView
 
     @Inject
-    lateinit var glide: RequestManager
+    lateinit var imageLoader: RequestManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,23 +54,23 @@ class NowPlayingFragment : Fragment() {
 
         binding.songTitleView.isSelected = true
 
-        glide.load(R.drawable.bg)
+        imageLoader.load(R.drawable.bg)
             .transform(
                 BlurTransformation(24, 4),
             )
             .into(blurImage)
 
-        glide.load(R.drawable.bg)
+        imageLoader.load(R.drawable.bg)
             .circleCrop()
             .into(cover)
 
         musicPlayerViewModel.coverUrl.observe(viewLifecycleOwner) {
-            glide.load(it)
+            imageLoader.load(it)
                 .placeholder(R.drawable.bg)
                 .circleCrop()
                 .into(cover)
 
-            glide.load(it)
+            imageLoader.load(it)
                 .placeholder(R.drawable.bg)
                 .transform(
                     BlurTransformation(24, 4),
@@ -86,6 +88,11 @@ class NowPlayingFragment : Fragment() {
             }
         }
 
+        musicPlayerViewModel.shuffleMode.observe(viewLifecycleOwner){
+            if(it == ShuffleMode.SHUFFLE_ON){
+                musicPlayerViewModel.setShuffledList()
+            }
+        }
 
         musicPlayerViewModel.isPlaying.observe(viewLifecycleOwner) { isPlaying ->
             if (isPlaying) {
@@ -102,7 +109,7 @@ class NowPlayingFragment : Fragment() {
             } else if (musicPlayerViewModel.isPlaying.value == false && musicPlayerViewModel.isPlayerInitialized) {
                 musicPlayerViewModel.play()
             } else {
-                Toast.makeText(requireContext(), "Nothing to play :(", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), NOTHING_ON_PLAY, Toast.LENGTH_SHORT).show()
             }
         }
 

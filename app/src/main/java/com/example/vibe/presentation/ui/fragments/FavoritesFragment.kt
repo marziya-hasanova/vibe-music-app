@@ -11,21 +11,24 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.RequestManager
 import com.example.vibe.R
 import com.example.vibe.databinding.FragmentFavoritesBinding
 import com.example.vibe.domain.models.Song
-import com.example.vibe.presentation.adapters.FavoritesAdapter
+import com.example.vibe.presentation.ui.adapters.FavoritesAdapter
 import com.example.vibe.presentation.interfaces.OnItemClickListener
 import com.example.vibe.presentation.ui.viewModels.FavoritesViewModel
 import com.example.vibe.presentation.ui.viewModels.MusicPlayerViewModel
 import com.example.vibe.utils.filterList
 import com.example.vibe.utils.setMenuToFavoritesFragment
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
 
 class FavoritesFragment : Fragment(), OnItemClickListener {
+
 
     private lateinit var binding: FragmentFavoritesBinding
     private var songList = mutableListOf<Song>()
@@ -34,6 +37,8 @@ class FavoritesFragment : Fragment(), OnItemClickListener {
     private val favoritesViewModel by activityViewModels<FavoritesViewModel>()
     private val musicPlayerViewModel by activityViewModels<MusicPlayerViewModel>()
 
+    @Inject
+    lateinit var imageLoader: RequestManager
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -77,6 +82,7 @@ class FavoritesFragment : Fragment(), OnItemClickListener {
     }
 
     override fun onItemClick(song: Song, position: Int) {
+        musicPlayerViewModel.isFavoritesListActive = true
         musicPlayerViewModel.setFavSongList(songList)
         musicPlayerViewModel.setSongToPlayer(song, position)
     }

@@ -8,3 +8,9 @@ const val VIEW_TYPE_ALL_FAVORITES_ITEM = 1
 
 const val THEME_PREFERENCES = "ThemePreferences"
 const val THEME_PREFERENCES_KEY = "DarkMode"
+
+const val SEARCH_ERROR_MESSAGE = "Oops! Something went wrong."
+const val NOTHING_ON_PLAY = "Nothing is on play"
+
+const val MY_FAVORITES = "My Favorites"
+

@@ -14,7 +14,7 @@ import com.bumptech.glide.RequestManager
 import com.example.vibe.R
 import com.example.vibe.databinding.FragmentHomeBinding
 import com.example.vibe.domain.models.Song
-import com.example.vibe.presentation.adapters.MusicAdapter
+import com.example.vibe.presentation.ui.adapters.MusicAdapter
 import com.example.vibe.presentation.interfaces.OnItemClickListener
 import com.example.vibe.presentation.ui.viewModels.FavoritesViewModel
 import com.example.vibe.presentation.ui.viewModels.MusicPlayerViewModel
@@ -34,9 +34,9 @@ class HomeFragment : Fragment(), OnItemClickListener {
     private val musicViewModel: MusicViewModel by activityViewModels()
     private val favoritesViewModel by activityViewModels<FavoritesViewModel>()
     private val musicPlayerViewModel by activityViewModels<MusicPlayerViewModel>()
-
     @Inject
-    lateinit var glide: RequestManager
+    lateinit var imageLoader: RequestManager
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,9 +49,15 @@ class HomeFragment : Fragment(), OnItemClickListener {
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL))
 
-       glide.load(R.drawable.bg)
+       imageLoader.load(R.drawable.bg)
             .transform(BlurTransformation(24, 4))
             .into(binding.fragmentBg)
+
+        musicViewModel.toastMessage.observe(viewLifecycleOwner) { message ->
+            message?.let {
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            }
+        }
 
         musicViewModel.searchResults.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
@@ -77,9 +83,9 @@ class HomeFragment : Fragment(), OnItemClickListener {
 
 
     override fun onItemClick(song: Song, position: Int) {
+        musicPlayerViewModel.isFavoritesListActive = false
         musicPlayerViewModel.setSongList(songList)
         musicPlayerViewModel.setSongToPlayer(song, position)
-        Toast.makeText(requireContext(), "play clicked", Toast.LENGTH_SHORT).show()
     }
 
     override fun onFavoriteItemClick(song: Song, position: Int) {
