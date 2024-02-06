@@ -16,17 +16,15 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-    @Provides
-    @Singleton
-    fun provideContext(application: Application): Context = application
 
     @Provides
     @Singleton
-    fun provideSharedPreferences(context: Context): SharedPreferences =
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences =
         context.getSharedPreferences(THEME_PREFERENCES, Context.MODE_PRIVATE)
 
 
     @Provides
+    @Singleton
     fun provideGlide(@ApplicationContext context: Context): RequestManager =
         Glide.with(context)
 

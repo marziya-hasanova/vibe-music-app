@@ -1,4 +1,4 @@
-package com.example.vibe.presentation.ui.viewModels
+package com.example.vibe.presentation.ui.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,8 +10,8 @@ import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.example.vibe.R
 import com.example.vibe.domain.models.Song
-import com.example.vibe.presentation.RepeatMode
-import com.example.vibe.presentation.ShuffleMode
+import com.example.vibe.utils.RepeatMode
+import com.example.vibe.utils.ShuffleMode
 import com.example.vibe.utils.NOTHING_ON_PLAY
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

@@ -1,16 +1,10 @@
-package com.example.vibe.presentation.ui.viewModels
+package com.example.vibe.presentation.ui.viewmodels
 
-import android.app.Application
-import android.content.Context
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Room
-import com.example.vibe.R
-import com.example.vibe.data.db.FavoriteSongDatabase
-import com.example.vibe.domain.repositories.FavoriteSongRepository
+import com.example.vibe.data.repositories.FavoriteSongRepository
 import com.example.vibe.domain.models.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -44,7 +38,7 @@ class FavoritesViewModel @Inject constructor(
          refreshFavorites()
     }
 
-     fun removeFromFavorites(song: Song) = viewModelScope.launch {
+     private fun removeFromFavorites(song: Song) = viewModelScope.launch {
          repository.deleteFromFavorites(song)
          _isFavorite.value = false
          refreshFavorites()

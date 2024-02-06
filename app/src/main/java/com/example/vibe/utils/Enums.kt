@@ -1,4 +1,4 @@
-package com.example.vibe.presentation
+package com.example.vibe.utils
 
 enum class RepeatMode {
     REPEAT_OFF,

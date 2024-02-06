@@ -3,7 +3,7 @@ package com.example.vibe.domain.usecases
 import androidx.annotation.Keep
 import com.example.vibe.domain.mappers.DataToSongMapper
 import com.example.vibe.domain.models.Song
-import com.example.vibe.domain.repositories.MusicRepository
+import com.example.vibe.data.repositories.MusicRepository
 import javax.inject.Inject
 
 class GetMusicDataUseCase @Inject constructor(

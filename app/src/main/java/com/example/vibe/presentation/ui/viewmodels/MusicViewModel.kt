@@ -1,4 +1,4 @@
-package com.example.vibe.presentation.ui.viewModels
+package com.example.vibe.presentation.ui.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vibe.domain.interactors.MusicInteractor
 import com.example.vibe.utils.API_KEY
-import com.example.vibe.domain.repositories.MusicRepository
 import com.example.vibe.domain.models.Song
 import com.example.vibe.utils.SEARCH_ERROR_MESSAGE
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -16,10 +16,10 @@ interface FavoriteSongDao {
 
     @Insert
     @Transaction
-    fun insert(favSong: Song)
+    suspend fun insert(favSong: Song)
 
     @Delete
     @Transaction
-    fun delete(favSong: Song)
+    suspend fun delete(favSong: Song)
 
 }

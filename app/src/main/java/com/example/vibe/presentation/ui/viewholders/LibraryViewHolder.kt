@@ -25,7 +25,7 @@ sealed class LibraryViewHolder (binding: ViewBinding): RecyclerView.ViewHolder(b
         val title = binding.songTitle
         val artist = binding.artistTitle
         val cover = binding.coverView
-        val isFavorite = binding.favoriteDefault
+        private val isFavorite = binding.favoriteDefault
 
         @SuppressLint("UseCompatLoadingForDrawables")
         fun bind(song: Song, position: Int, listener: OnItemClickListener){

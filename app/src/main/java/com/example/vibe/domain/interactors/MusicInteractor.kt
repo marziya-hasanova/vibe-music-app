@@ -7,7 +7,6 @@ import javax.inject.Inject
 class MusicInteractor @Inject constructor(
     private val getMusicDataUseCase: GetMusicDataUseCase
 ) {
-
     suspend fun getMusicData(query: String, key: String): List<Song> {
         return getMusicDataUseCase(query, key)
     }

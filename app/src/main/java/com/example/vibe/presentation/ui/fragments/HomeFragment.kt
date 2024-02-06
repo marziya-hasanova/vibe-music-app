@@ -16,9 +16,9 @@ import com.example.vibe.databinding.FragmentHomeBinding
 import com.example.vibe.domain.models.Song
 import com.example.vibe.presentation.ui.adapters.MusicAdapter
 import com.example.vibe.presentation.interfaces.OnItemClickListener
-import com.example.vibe.presentation.ui.viewModels.FavoritesViewModel
-import com.example.vibe.presentation.ui.viewModels.MusicPlayerViewModel
-import com.example.vibe.presentation.ui.viewModels.MusicViewModel
+import com.example.vibe.presentation.ui.viewmodels.FavoritesViewModel
+import com.example.vibe.presentation.ui.viewmodels.MusicPlayerViewModel
+import com.example.vibe.presentation.ui.viewmodels.MusicViewModel
 import com.example.vibe.utils.setMenuHomeFragment
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.glide.transformations.BlurTransformation

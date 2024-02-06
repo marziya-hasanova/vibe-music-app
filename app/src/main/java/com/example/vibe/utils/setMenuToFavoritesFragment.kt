@@ -8,7 +8,6 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import com.example.vibe.R
-import com.example.vibe.presentation.ui.viewModels.MusicViewModel
 
 fun setMenuToFavoritesFragment(
     fragmentActivity: FragmentActivity,

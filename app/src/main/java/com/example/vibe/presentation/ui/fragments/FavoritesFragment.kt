@@ -17,8 +17,8 @@ import com.example.vibe.databinding.FragmentFavoritesBinding
 import com.example.vibe.domain.models.Song
 import com.example.vibe.presentation.ui.adapters.FavoritesAdapter
 import com.example.vibe.presentation.interfaces.OnItemClickListener
-import com.example.vibe.presentation.ui.viewModels.FavoritesViewModel
-import com.example.vibe.presentation.ui.viewModels.MusicPlayerViewModel
+import com.example.vibe.presentation.ui.viewmodels.FavoritesViewModel
+import com.example.vibe.presentation.ui.viewmodels.MusicPlayerViewModel
 import com.example.vibe.utils.filterList
 import com.example.vibe.utils.setMenuToFavoritesFragment
 import dagger.hilt.android.AndroidEntryPoint

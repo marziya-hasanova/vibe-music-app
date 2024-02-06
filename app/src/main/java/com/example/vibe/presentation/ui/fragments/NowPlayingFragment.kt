@@ -15,8 +15,8 @@ import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.RequestManager
 import com.example.vibe.R
 import com.example.vibe.databinding.FragmentNowPlayingBinding
-import com.example.vibe.presentation.ShuffleMode
-import com.example.vibe.presentation.ui.viewModels.MusicPlayerViewModel
+import com.example.vibe.utils.ShuffleMode
+import com.example.vibe.presentation.ui.viewmodels.MusicPlayerViewModel
 import com.example.vibe.utils.NOTHING_ON_PLAY
 import com.example.vibe.utils.formatDuration
 import dagger.hilt.android.AndroidEntryPoint
